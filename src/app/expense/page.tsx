@@ -1,40 +1,86 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import { formatCurrency } from '@/utils';
+
+interface Expense {
+  id: string;
+  description: string;
+  amount: number;
+  category: string;
+  date: string;
+}
 
 const ExpensePage = () => {
-  const [expenses, setExpenses] = useState([
-    { id: 1, description: 'Groceries', amount: 150, category: 'Food', date: '2024-01-10' },
-    { id: 2, description: 'Rent', amount: 1200, category: 'Housing', date: '2024-01-01' },
-    { id: 3, description: 'Utilities', amount: 200, category: 'Bills', date: '2024-01-05' },
-  ])
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
-    category: '',
-    date: ''
-  })
+    category: 'Food',
+    date: new Date().toISOString().split('T')[0]
+  });
+
+  // Fetch expenses on component mount
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
+
+  const fetchExpenses = async () => {
+    try {
+      const response = await fetch('/api/expenses');
+      if (response.ok) {
+        const data = await response.json();
+        setExpenses(data);
+      }
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (formData.description && formData.amount && formData.category && formData.date) {
-      const newExpense = {
-        id: expenses.length + 1,
-        ...formData,
-        amount: parseFloat(formData.amount)
-      }
-      setExpenses(prev => [...prev, newExpense])
-      setFormData({ description: '', amount: '', category: '', date: '' })
-    }
-  }
+      setSubmitting(true);
+      try {
+        const response = await fetch('/api/expenses', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
 
-  const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0)
+        if (response.ok) {
+          const newExpense = await response.json();
+          setExpenses(prev => [newExpense, ...prev]);
+          setFormData({
+            description: '',
+            amount: '',
+            category: 'Food',
+            date: new Date().toISOString().split('T')[0]
+          });
+        } else {
+          console.error('Failed to create expense');
+        }
+      } catch (error) {
+        console.error('Error creating expense:', error);
+      } finally {
+        setSubmitting(false);
+      }
+    }
+  };
+
+  const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
   return (
     <div className="space-y-6">
@@ -102,9 +148,10 @@ const ExpensePage = () => {
           </div>
           <button
             type="submit"
-            className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors"
+            disabled={submitting}
+            className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Add Expense
+            {submitting ? 'Adding...' : 'Add Expense'}
           </button>
         </form>
       </div>
@@ -116,20 +163,26 @@ const ExpensePage = () => {
           <p className="text-lg font-semibold text-red-600">Total: ${totalExpenses.toLocaleString()}</p>
         </div>
         <div className="space-y-3">
-          {expenses.map((expense) => (
-            <div key={expense.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
-                  💸
+          {loading ? (
+            <p className="text-center text-gray-500">Loading expenses...</p>
+          ) : expenses.length === 0 ? (
+            <p className="text-center text-gray-500">No expenses yet</p>
+          ) : (
+            expenses.map((expense) => (
+              <div key={expense.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                    💸
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-800">{expense.description}</p>
+                    <p className="text-sm text-gray-500">{expense.category} • {new Date(expense.date).toLocaleDateString()}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-800">{expense.description}</p>
-                  <p className="text-sm text-gray-500">{expense.category} • {expense.date}</p>
-                </div>
+                <p className="font-semibold text-red-600">${expense.amount.toFixed(2)}</p>
               </div>
-              <p className="font-semibold text-red-600">${expense.amount}</p>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

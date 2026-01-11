@@ -1,39 +1,85 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+
+interface Income {
+  id: string;
+  description: string;
+  amount: number;
+  source: string;
+  date: string;
+}
 
 const IncomePage = () => {
-  const [incomes, setIncomes] = useState([
-    { id: 1, description: 'Salary', amount: 3000, source: 'Job', date: '2024-01-01' },
-    { id: 2, description: 'Freelance', amount: 500, source: 'Side Project', date: '2024-01-15' },
-  ])
+  const [incomes, setIncomes] = useState<Income[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
-    source: '',
-    date: ''
-  })
+    source: 'Job',
+    date: new Date().toISOString().split('T')[0]
+  });
+
+  // Fetch incomes on component mount
+  useEffect(() => {
+    fetchIncomes();
+  }, []);
+
+  const fetchIncomes = async () => {
+    try {
+      const response = await fetch('/api/incomes');
+      if (response.ok) {
+        const data = await response.json();
+        setIncomes(data);
+      }
+    } catch (error) {
+      console.error('Error fetching incomes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (formData.description && formData.amount && formData.source && formData.date) {
-      const newIncome = {
-        id: incomes.length + 1,
-        ...formData,
-        amount: parseFloat(formData.amount)
-      }
-      setIncomes(prev => [...prev, newIncome])
-      setFormData({ description: '', amount: '', source: '', date: '' })
-    }
-  }
+      setSubmitting(true);
+      try {
+        const response = await fetch('/api/incomes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
 
-  const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0)
+        if (response.ok) {
+          const newIncome = await response.json();
+          setIncomes(prev => [newIncome, ...prev]);
+          setFormData({
+            description: '',
+            amount: '',
+            source: 'Job',
+            date: new Date().toISOString().split('T')[0]
+          });
+        } else {
+          console.error('Failed to create income');
+        }
+      } catch (error) {
+        console.error('Error creating income:', error);
+      } finally {
+        setSubmitting(false);
+      }
+    }
+  };
+
+  const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
 
   return (
     <div className="space-y-6">
@@ -100,9 +146,10 @@ const IncomePage = () => {
           </div>
           <button
             type="submit"
-            className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors"
+            disabled={submitting}
+            className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Add Income
+            {submitting ? 'Adding...' : 'Add Income'}
           </button>
         </form>
       </div>
@@ -114,20 +161,26 @@ const IncomePage = () => {
           <p className="text-lg font-semibold text-green-600">Total: ${totalIncome.toLocaleString()}</p>
         </div>
         <div className="space-y-3">
-          {incomes.map((income) => (
-            <div key={income.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
-                  💰
+          {loading ? (
+            <p className="text-center text-gray-500">Loading incomes...</p>
+          ) : incomes.length === 0 ? (
+            <p className="text-center text-gray-500">No incomes yet</p>
+          ) : (
+            incomes.map((income) => (
+              <div key={income.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                    💰
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-800">{income.description}</p>
+                    <p className="text-sm text-gray-500">{income.source} • {new Date(income.date).toLocaleDateString()}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-gray-800">{income.description}</p>
-                  <p className="text-sm text-gray-500">{income.source} • {income.date}</p>
-                </div>
+                <p className="font-semibold text-green-600">${income.amount.toFixed(2)}</p>
               </div>
-              <p className="font-semibold text-green-600">${income.amount}</p>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

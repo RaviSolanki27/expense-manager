@@ -9,11 +9,13 @@ export const amountColorMap: Record<IAmountType, string> = {
 export const formatCurrency = (
   amount: number,
   locale: string,
-  currency: string
+  currency: string,
+  showDecimals: boolean = true
 ) => {
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: showDecimals ? 2 : 0,
+    maximumFractionDigits: showDecimals ? 2 : 0,
   }).format(amount);
 };

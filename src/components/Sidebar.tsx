@@ -11,6 +11,7 @@ const Sidebar = () => {
     { name: 'Dashboard', href: '/dashboard', icon: '📊' },
     { name: 'Expenses', href: '/expense', icon: '💸' },
     { name: 'Income', href: '/income', icon: '💰' },
+    { name: 'Settings', href: '/settings', icon: '⚙️' },
   ]
 
   return (
