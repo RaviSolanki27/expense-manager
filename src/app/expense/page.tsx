@@ -48,8 +48,10 @@ const ExpensePage = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    
     e.preventDefault();
     if (formData.description && formData.amount && formData.category && formData.date) {
+      console.log("submit data", formData);
       setSubmitting(true);
       try {
         const response = await fetch('/api/expenses', {
