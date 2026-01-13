@@ -14,7 +14,7 @@ export default function ProtectedLayout({
 }>) {
   return (
     <div>
-      <div className="flex h-screen bg-gray-100">
+      <div className="flex h-screen bg-background">
         <Sidebar />
         <div className="flex-1 flex flex-col">
           <Header />

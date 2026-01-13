@@ -15,9 +15,9 @@ const Sidebar = () => {
   ]
 
   return (
-    <aside className="w-64 bg-white shadow-sm border-r border-gray-200">
+    <aside className="w-64 bg-background shadow-sm border-r border-border">
       <div className="p-6">
-        <h2 className="text-xl font-semibold text-gray-800">Menu</h2>
+        <h2 className="text-xl font-semibold text-foreground">Menu</h2>
       </div>
       <nav className="px-4">
         <ul className="space-y-2">
@@ -27,8 +27,8 @@ const Sidebar = () => {
                 href={item.href}
                 className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
                   pathname === item.href
-                    ? 'bg-blue-50 text-blue-700 border-r-4 border-blue-700'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    ? 'bg-primary/10 text-primary border-r-4 border-primary'
+                    : 'text-foreground hover:bg-muted'
                 }`}
               >
                 <span className="mr-3">{item.icon}</span>

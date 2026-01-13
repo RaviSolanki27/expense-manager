@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { selectUser, fetchUserData } from '@/store/slices/userSlice';
 import Image from 'next/image';
+import { ThemeToggle } from './ThemeToggle';
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -25,12 +26,13 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+    <header className="bg-background shadow-sm border-b border-border px-6 py-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-gray-800">
+        <h1 className="text-2xl font-semibold text-foreground">
           Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''}
         </h1>
         <div className="flex items-center space-x-4">
+          <ThemeToggle />
           {user?.image ? (
             <div className="w-8 h-8 rounded-full overflow-hidden">
               <Image
@@ -42,11 +44,11 @@ const Header = () => {
               />
             </div>
           ) : (
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-medium">
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-medium">
               {getInitials()}
             </div>
           )}
-          <span className="text-gray-700">{user?.name || 'User'}</span>
+          <span className="text-foreground">{user?.name || 'User'}</span>
         </div>
       </div>
     </header>
