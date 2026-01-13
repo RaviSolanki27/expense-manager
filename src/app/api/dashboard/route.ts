@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 export async function GET(request: NextRequest) {
   try {
     const userId = request.headers.get('x-user-id');
+    console.log("sdscds-=-=-=-=-=-=--=", userId);
     
     if (!userId) {
       return NextResponse.json(
