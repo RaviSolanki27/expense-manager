@@ -1,10 +1,10 @@
-// src/components/common/CustomInput.tsx
-import { FieldProps, FormikErrors } from 'formik';
+// src/components/common/CustomDatePicker.tsx
+import { FieldProps } from 'formik';
 import { InputHTMLAttributes } from 'react';
 
-interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface CustomDatePickerProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  errorText?: string | undefined;
+  errorText?: string;
   containerClassName?: string;
   labelClassName?: string;
   inputClassName?: string;
@@ -13,7 +13,7 @@ interface CustomInputProps extends InputHTMLAttributes<HTMLInputElement> {
   id?: string;
 }
 
-const CustomInput = ({
+const CustomDatePicker = ({
   label,
   errorText,
   containerClassName = '',
@@ -23,8 +23,8 @@ const CustomInput = ({
   required = false,
   id,
   ...inputProps
-}: CustomInputProps) => {
-  const inputId = id || `input-${label?.replace(/\s+/g, '-').toLowerCase()}`;
+}: CustomDatePickerProps) => {
+  const inputId = id || `date-${label?.replace(/\s+/g, '-').toLowerCase()}`;
 
   return (
     <div className={`mb-4 ${containerClassName}`}>
@@ -34,29 +34,29 @@ const CustomInput = ({
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
-      <input
-        id={inputId}
-        className={`
-          w-full px-3 py-2 border rounded-md
-          focus:outline-none focus:ring-1 focus:ring-blue-500 placeholder-gray-400 text-gray-700
-          ${errorText ? 'border-red-500' : 'border-gray-300'}
-          ${inputClassName}
-        `}
-        aria-invalid={!!errorText}
-        aria-required={required}
-        {...inputProps}
-      />
-      {errorText && (
-        <div className={errorClassName}>
-          {errorText}
-        </div>
-      )}
+      <div className="relative">
+        <input
+          type="date"
+          id={inputId}
+          className={`
+            w-full px-3 py-2 border rounded-md
+            focus:outline-none focus:ring-1 focus:ring-blue-500
+            ${errorText ? 'border-red-500' : 'border-gray-300'}
+            ${inputClassName}
+            text-gray-700
+          `}
+          aria-invalid={!!errorText}
+          aria-required={required}
+          {...inputProps}
+        />
+      </div>
+      {errorText && <div className={errorClassName}>{errorText}</div>}
     </div>
   );
 };
 
 // Formik Field wrapper
-const FormikInput = ({ 
+const FormikDatePicker = ({ 
   field, 
   form: { touched, errors }, 
   label, 
@@ -72,7 +72,7 @@ const FormikInput = ({
   ) : undefined;
 
   return (
-    <CustomInput
+    <CustomDatePicker
       {...field}
       {...props}
       label={label}
@@ -81,4 +81,4 @@ const FormikInput = ({
   );
 };
 
-export { CustomInput as default, FormikInput };
+export { CustomDatePicker as default, FormikDatePicker };

@@ -19,7 +19,7 @@ const initialState: ExpenseState = {
 
 // Async Thunks
 export const fetchExpenses = createAsyncThunk(
-  'expenses/fetchAll',
+  'expenses',
   async (_, { rejectWithValue }) => {
     try {
       return await expenseApi.getExpenses();
