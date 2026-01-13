@@ -1,6 +1,6 @@
 export const lightTheme = {
-  background: "0 0% 100%",
-  foreground: "222.2 84% 4.9%",
+  background: "60 100% 100%",
+  foreground: "0 100% 100%",
   card: "0 0% 100%",
   "card-foreground": "222.2 84% 4.9%",
   popover: "0 0% 100%",
@@ -22,9 +22,9 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
-  background: "222.2 84% 4.9%",
-  foreground: "210 40% 98%",
-  card: "222.2 84% 4.9%",
+  background: "s 60 100% 100%",
+  foreground: "0 100% 100%",
+  card: "60 100% 100%",
   "card-foreground": "210 40% 98%",
   popover: "222.2 84% 4.9%",
   "popover-foreground": "210 40% 98%",

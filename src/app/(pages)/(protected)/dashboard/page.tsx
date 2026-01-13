@@ -5,6 +5,7 @@ import PieChart from "@/components/charts/PieChart";
 import { TrendingDown, TrendingUp, Loader2 } from "lucide-react";
 import { useAppSelector } from "@/store/hooks";
 import { formatCurrency } from "@/utils";
+import Card from '@/components/cards/Card';
 
 interface Transaction {
   id: string;
@@ -86,41 +87,50 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-3xl font-bold text-gray-800">Dashboard</h2>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
-        <LargeStatCard amount={balance} title="Total Balance" type="BALANCE" />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 ">
+        <LargeStatCard amount={balance} title="Total Balance" type="BALANCE" percentage="10.1" />
         <LargeStatCard
           amount={totalIncome}
           title="Total Income"
           type="INCOME"
+          percentage="-12.0"
         />
         <LargeStatCard
           amount={totalExpenses}
           title="Total Expenses"
           type="EXPENSE"
+          percentage="10.1"
+        />
+        <LargeStatCard
+          amount={totalExpenses}
+          title="Total Savings"
+          type="SAVING"
+          percentage="10.1"
         />
       </div>
 
       {/* Charts and Transactions Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Transactions */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+          <div className="lg:col-span-2">
+        <Card applyHover={false}>
+
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-semibold text-gray-800">
               Recent Transactions
             </h3>
-            <button className="text-sm text-indigo-600 hover:text-indigo-800">
+            <button className="text-sm text-indigo-600 hover:text-indigo-800 cursor-pointer">
               View All
             </button>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-1">
             {recentTransactions.length > 0 ? (
               recentTransactions.map((transaction) => (
                 <div
                   key={`${transaction.type}-${transaction.id}`}
-                  className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors"
+                  className="flex items-center justify-between px-3 py-1 hover:bg-gray-50 rounded-lg transition-colors"
                 >
                   <div className="flex items-center space-x-4">
                     <div
@@ -175,16 +185,18 @@ const Dashboard = () => {
               <p className="text-center text-gray-500 py-4">No recent transactions</p>
             )}
           </div>
-        </div>
+
+        </Card>
+          </div>
 
         {/* Pie Chart */}
-        <div className="lg:col-span-1">
+        <Card>
           <PieChart
             balance={balance}
             income={totalIncome}
             expenses={totalExpenses}
           />
-        </div>
+        </Card>
       </div>
     </div>
   );
