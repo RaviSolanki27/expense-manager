@@ -23,8 +23,9 @@ export async function middleware(request: NextRequest) {
   }
 
   // Verify token
+  console.log('Token:', token);
   const payload = await verifyToken(token);
-  
+  console.log('Payload:', payload);
   if (!payload) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
@@ -37,7 +38,7 @@ export async function middleware(request: NextRequest) {
   // Add user info to request headers for API routes
   if (pathname.startsWith('/api')) {
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set('x-user-id', payload.userId);
+    requestHeaders.set('x-user-id', payload.userId as string);
     
     return NextResponse.next({
       request: {

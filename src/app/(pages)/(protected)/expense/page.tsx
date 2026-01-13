@@ -48,10 +48,8 @@ const ExpensePage = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    
     e.preventDefault();
     if (formData.description && formData.amount && formData.category && formData.date) {
-      console.log("submit data", formData);
       setSubmitting(true);
       try {
         const response = await fetch('/api/expenses', {
@@ -60,6 +58,7 @@ const ExpensePage = () => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(formData),
+          credentials: 'include',
         });
 
         if (response.ok) {
@@ -72,13 +71,37 @@ const ExpensePage = () => {
             date: new Date().toISOString().split('T')[0]
           });
         } else {
-          console.error('Failed to create expense');
+          const errorData = await response.json();
+          console.error('Failed to create expense:', errorData.message);
         }
       } catch (error) {
         console.error('Error creating expense:', error);
       } finally {
         setSubmitting(false);
       }
+    }
+  };
+
+  const handleDeleteExpense = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this expense?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/expenses?id=${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        // Remove the deleted expense from the local state
+        setExpenses(prev => prev.filter(expense => expense.id !== id));
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to delete expense:', errorData.message);
+      }
+    } catch (error) {
+      console.error('Error deleting expense:', error);
     }
   };
 
@@ -171,17 +194,35 @@ const ExpensePage = () => {
             <p className="text-center text-gray-500">No expenses yet</p>
           ) : (
             expenses.map((expense) => (
-              <div key={expense.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+              <div key={expense.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0 group">
+                <div className="flex items-center space-x-3 flex-1">
+                  <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center flex-shrink-0">
                     💸
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-800">{expense.description}</p>
-                    <p className="text-sm text-gray-500">{expense.category} • {new Date(expense.date).toLocaleDateString()}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start">
+                      <p className="font-medium text-gray-800 truncate pr-2">{expense.description}</p>
+                      <p className="font-semibold text-red-600 whitespace-nowrap ml-2">${expense.amount.toFixed(2)}</p>
+                    </div>
+                    <div className="flex justify-between items-center mt-1">
+                      <p className="text-sm text-gray-500">
+                        {expense.category} • {new Date(expense.date).toLocaleDateString()}
+                      </p>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteExpense(expense.id);
+                        }}
+                        className="text-red-500 hover:text-red-700 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none"
+                        aria-label="Delete expense"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <p className="font-semibold text-red-600">${expense.amount.toFixed(2)}</p>
               </div>
             ))
           )}

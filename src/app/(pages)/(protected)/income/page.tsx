@@ -29,10 +29,15 @@ const IncomePage = () => {
 
   const fetchIncomes = async () => {
     try {
-      const response = await fetch('/api/incomes');
+      const response = await fetch('/api/incomes', {
+        credentials: 'include',
+      });
       if (response.ok) {
         const data = await response.json();
         setIncomes(data);
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to fetch incomes:', errorData.message);
       }
     } catch (error) {
       console.error('Error fetching incomes:', error);
@@ -56,7 +61,11 @@ const IncomePage = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(formData),
+          credentials: 'include',
+          body: JSON.stringify({
+            ...formData,
+            amount: parseFloat(formData.amount),
+          }),
         });
 
         if (response.ok) {
@@ -69,13 +78,41 @@ const IncomePage = () => {
             date: new Date().toISOString().split('T')[0]
           });
         } else {
-          console.error('Failed to create income');
+          const errorData = await response.json();
+          console.error('Failed to create income:', errorData.message);
+          alert(`Failed to create income: ${errorData.message || 'Unknown error'}`);
         }
       } catch (error) {
         console.error('Error creating income:', error);
+        alert('An error occurred while creating the income. Please try again.');
       } finally {
         setSubmitting(false);
       }
+    }
+  };
+
+  const handleDeleteIncome = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this income?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/incomes?id=${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        // Remove the deleted income from the local state
+        setIncomes(prev => prev.filter(income => income.id !== id));
+      } else {
+        const errorData = await response.json();
+        console.error('Failed to delete income:', errorData.message);
+        alert(`Failed to delete income: ${errorData.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting income:', error);
+      alert('An error occurred while deleting the income. Please try again.');
     }
   };
 
@@ -167,17 +204,35 @@ const IncomePage = () => {
             <p className="text-center text-gray-500">No incomes yet</p>
           ) : (
             incomes.map((income) => (
-              <div key={income.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+              <div key={income.id} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0 group">
+                <div className="flex items-center space-x-3 flex-1">
+                  <div className="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center flex-shrink-0">
                     💰
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-800">{income.description}</p>
-                    <p className="text-sm text-gray-500">{income.source} • {new Date(income.date).toLocaleDateString()}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start">
+                      <p className="font-medium text-gray-800 truncate pr-2">{income.description}</p>
+                      <p className="font-semibold text-green-600 whitespace-nowrap ml-2">${income.amount.toFixed(2)}</p>
+                    </div>
+                    <div className="flex justify-between items-center mt-1">
+                      <p className="text-sm text-gray-500">
+                        {income.source} • {new Date(income.date).toLocaleDateString()}
+                      </p>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteIncome(income.id);
+                        }}
+                        className="text-red-500 hover:text-red-700 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none"
+                        aria-label="Delete income"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <p className="font-semibold text-green-600">${income.amount.toFixed(2)}</p>
               </div>
             ))
           )}

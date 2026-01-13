@@ -1,6 +1,7 @@
 export const runtime = "nodejs";
-import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 type IncomeData = {
   description: string
@@ -10,68 +11,133 @@ type IncomeData = {
   userId?: string // Make userId optional for development
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // For now, return all incomes (we'll add user filtering later)
+    const userId = request.headers.get('x-user-id');
+    
+    if (!userId) {
+      return NextResponse.json(
+        { message: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const incomes = await prisma.income.findMany({
-      orderBy: {
-        date: 'desc'
-      }
-    })
-    return NextResponse.json(incomes)
+      where: { userId },
+      orderBy: { date: 'desc' },
+    });
+
+    return NextResponse.json(incomes);
   } catch (error) {
-    console.error('Error fetching incomes:', error)
+    console.error('Error fetching incomes:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch incomes' },
+      { message: 'Failed to fetch incomes' },
       { status: 500 }
-    )
+    );
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const data: IncomeData = await request.json()
-
-    // Validate required fields
-    if (!data.description || !data.amount || !data.source || !data.date) {
+    const userId = request.headers.get('x-user-id');
+    
+    if (!userId) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
+        { message: 'Unauthorized' },
+        { status: 401 }
+      );
     }
 
-    // For development, use a default user if not provided
-    let userId = data.userId;
-    if (!userId) {
-      // Create or find a default user
-      const defaultUser = await prisma.user.upsert({
-        where: { email: 'default@example.com' },
-        update: {},
-        create: {
-          email: 'default@example.com',
-          password: 'password123',
-          name: 'Default User',
+    const { description, amount, source, date } = await request.json();
+
+    if (!description || amount === undefined || !source) {
+      return NextResponse.json(
+        { 
+          message: 'Missing required fields',
+          required: ['description', 'amount', 'source']
         },
-      });
-      userId = defaultUser.id;
+        { status: 400 }
+      );
     }
 
     const income = await prisma.income.create({
       data: {
-        description: data.description,
-        amount: parseFloat(data.amount.toString()),
-        source: data.source,
-        date: new Date(data.date),
-        userId: userId
-      }
-    })
+        description,
+        amount: parseFloat(amount),
+        source,
+        date: date ? new Date(date) : new Date(),
+        userId,
+      },
+    });
 
-    return NextResponse.json(income, { status: 201 })
+    return NextResponse.json(income, { status: 201 });
   } catch (error) {
-    console.error('Error creating income:', error)
+    console.error('Error creating income:', error);
     return NextResponse.json(
-      { error: 'Failed to create income' },
+      { 
+        message: 'Failed to create income',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
-    )
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const userId = request.headers.get('x-user-id');
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    
+    if (!userId) {
+      return NextResponse.json(
+        { message: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    if (!id) {
+      return NextResponse.json(
+        { message: 'Income ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Verify the income belongs to the user
+    const income = await prisma.income.findUnique({
+      where: { id },
+    });
+
+    if (!income) {
+      return NextResponse.json(
+        { message: 'Income not found' },
+        { status: 404 }
+      );
+    }
+
+    if (income.userId !== userId) {
+      return NextResponse.json(
+        { message: 'Not authorized to delete this income' },
+        { status: 403 }
+      );
+    }
+
+    await prisma.income.delete({
+      where: { id },
+    });
+
+    return NextResponse.json(
+      { message: 'Income deleted successfully' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error deleting income:', error);
+    return NextResponse.json(
+      { 
+        message: 'Failed to delete income',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
   }
 }
