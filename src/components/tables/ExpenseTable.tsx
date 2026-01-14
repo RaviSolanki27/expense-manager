@@ -75,7 +75,7 @@ export function ExpenseTable({
       keyField="id"
       onRowClick={onRowClick}
       className={className}
-      rowClassName="hover:bg-muted/50"
+      rowClassName="hover:bg-purple-10 hover:text-purple-70"
       headerClassName="bg-muted/50 bg-purple-20 rounded-full! rounded!"
     />
   );

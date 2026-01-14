@@ -45,14 +45,14 @@ export function DataTable<T>({
   return (
     <div className="rounded-lg overflow-hidden">
       <div className="w-full overflow-auto">
-        <table className={twMerge('w-full caption-bottom text-sm border-separate border-spacing-0', className)}>
-          <thead>
-            <tr>
+        <table className={twMerge('w-full caption-bottom text-sm border-separate border-spacing-y-2', className)}>
+          <thead >
+            <tr className="[&>th]:bg-purple-10 [&>th:first-child]:rounded-l-full [&>th:last-child]:rounded-r-full">
               {columns.map((column, index) => (
                 <th
                   key={index}
                   className={twMerge(
-                    'h-10 px-4 text-left align-middle font-medium text-muted-foreground bg-purple-10 text-purple-70',
+                    'h-10 px-6 text-left align-middle font-medium text-muted-foreground bg-purple-10! text-purple-70',
                     column.headerClassName,
                     index === 0 ? 'rounded-l-full' : '',
                     index === columns.length - 1 ? 'rounded-r-full' : ''
@@ -63,14 +63,14 @@ export function DataTable<T>({
               ))}
             </tr>
           </thead>
-          <tbody className="[&_tr:last-child]:border-0">
+          <tbody>
             {data.length > 0 ? (
               data.map((item, rowIndex) => (
                 <tr
                   key={String(item[keyField])}
                   className={twMerge(
-                    'border-b transition-colors',
-                    onRowClick && 'cursor-pointer hover:bg-muted/50',
+                    'group',
+                    onRowClick && 'cursor-pointer hover:bg-purple-20',
                     rowClassName
                   )}
                   onClick={() => onRowClick?.(item)}
@@ -79,7 +79,9 @@ export function DataTable<T>({
                     <td
                       key={colIndex}
                       className={twMerge(
-                        'p-4 align-middle',
+                        'p-2! px-3! align-middle',
+                        colIndex === columns.length - 1 ? 'rounded-r-full' : '',
+                        colIndex === 0 ? 'rounded-l-full' : '',
                         column.className,
                         column.cellClassName,
                         cellClassName
