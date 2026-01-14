@@ -1,17 +1,19 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import LargeStatCard from "@/components/cards/LargeStatCard";
 import PieChart from "@/components/charts/PieChart";
-import { TrendingDown, TrendingUp, Loader2 } from "lucide-react";
+import { TrendingDown, TrendingUp, Loader2, ChevronRight } from "lucide-react";
 import { useAppSelector } from "@/store/hooks";
 import { formatCurrency } from "@/utils";
-import Card from '@/components/cards/Card';
+import Card from "@/components/cards/Card";
+import IconButton from "@/components/Buttons/IconButton";
+import { ExpenseTable } from "@/components/tables/ExpenseTable";
 
 interface Transaction {
   id: string;
   description: string;
   amount: number;
-  type: 'income' | 'expense';
+  type: "income" | "expense";
   date: string;
   category: string;
 }
@@ -24,7 +26,9 @@ interface DashboardData {
 }
 
 const Dashboard = () => {
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,20 +42,22 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/dashboard', {
-          credentials: 'include',
+        const response = await fetch("/api/dashboard", {
+          credentials: "include",
         });
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to fetch dashboard data');
+          throw new Error(
+            errorData.message || "Failed to fetch dashboard data"
+          );
         }
 
         const data = await response.json();
         setDashboardData(data);
       } catch (err) {
-        console.error('Error fetching dashboard data:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error("Error fetching dashboard data:", err);
+        setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
         setLoading(false);
       }
@@ -71,7 +77,10 @@ const Dashboard = () => {
   if (error) {
     return (
       <div className="p-6">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
           <strong className="font-bold">Error: </strong>
           <span className="block sm:inline">{error}</span>
         </div>
@@ -83,14 +92,19 @@ const Dashboard = () => {
     return <div className="p-6">No data available</div>;
   }
 
-  const { balance, totalIncome, totalExpenses, recentTransactions } = dashboardData;
+  const { balance, totalIncome, totalExpenses, recentTransactions } =
+    dashboardData;
 
   return (
     <div className="space-y-6">
-
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 ">
-        <LargeStatCard amount={balance} title="Total Balance" type="BALANCE" percentage="10.1" />
+        <LargeStatCard
+          amount={balance}
+          title="Total Balance"
+          type="BALANCE"
+          percentage="10.1"
+        />
         <LargeStatCard
           amount={totalIncome}
           title="Total Income"
@@ -114,80 +128,27 @@ const Dashboard = () => {
       {/* Charts and Transactions Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Transactions */}
-          <div className="lg:col-span-2">
-        <Card applyHover={false}>
+        <div className="lg:col-span-2">
+          <Card applyHover={false}>
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-semibold text-gray-800 mt-1">
+                Recent Transactions
+              </h3>
+              <IconButton
+                label="See all"
+                backIcon={
+                  <ChevronRight className="h-4 w-4 hover:text-purple-80" />
+                }
+              />
+            </div>
 
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-gray-800">
-              Recent Transactions
-            </h3>
-            <button className="text-sm text-indigo-600 hover:text-indigo-800 cursor-pointer">
-              View All
-            </button>
-          </div>
-          <div className="space-y-1">
-            {recentTransactions.length > 0 ? (
-              recentTransactions.map((transaction) => (
-                <div
-                  key={`${transaction.type}-${transaction.id}`}
-                  className="flex items-center justify-between px-3 py-1 hover:bg-gray-50 rounded-lg transition-colors"
-                >
-                  <div className="flex items-center space-x-4">
-                    <div
-                      className={`p-2 rounded-lg ${
-                        transaction.type === "income"
-                          ? "bg-green-50 text-green-600"
-                          : "bg-red-50 text-red-600"
-                      }`}
-                    >
-                      {transaction.type === "income" ? (
-                        <TrendingUp className="w-5 h-5" />
-                      ) : (
-                        <TrendingDown className="w-5 h-5" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-800">
-                        {transaction.description}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {transaction.category} • {new Date(transaction.date).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div
-                      className={`px-2 py-1 rounded-md flex items-center space-x-1 ${
-                        transaction.type === "income"
-                          ? "bg-green-50 text-green-600"
-                          : "bg-red-50 text-red-600"
-                      }`}
-                    >
-                      {transaction.type === "income" ? "+" : "-"}
-                      <span className="text-sm font-medium ml-1">
-                        {formatCurrency(
-                          transaction.amount,
-                          locale,
-                          displayCurrency,
-                          showDecimals
-                        )}
-                      </span>
-                      {transaction.type === "income" ? (
-                        <TrendingUp className="w-3 h-3" />
-                      ) : (
-                        <TrendingDown className="w-3 h-3" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-center text-gray-500 py-4">No recent transactions</p>
-            )}
-          </div>
-
-        </Card>
-          </div>
+            <ExpenseTable
+              expenses={recentTransactions}
+              onRowClick={() => {}} // TODO: Implement row click handler
+              className="mt-4"
+            />
+          </Card>
+        </div>
 
         {/* Pie Chart */}
         <Card>

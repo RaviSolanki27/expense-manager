@@ -71,6 +71,16 @@ body {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
+  --color-purple-10: #F5F4FF;
+  --color-purple-20: #ECEAFF;
+  --color-purple-30: #D6D2FF;
+  --color-purple-40: #BFB7FF;
+  --color-purple-50: #A498FF;
+  --color-purple-60: #8407FF;
+  --color-purple-70: #7664E4;
+  --color-purple-80: #6657C6;
+  --color-purple-90: #5347A1;
+
   --color-orange-10: #fffdfc;
   --color-orange-20: #fff8f5;
   --color-orange-30: #fcece4;
