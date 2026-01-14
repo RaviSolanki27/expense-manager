@@ -1,117 +1,63 @@
-"use client"
-import React from 'react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
+import { Pie, PieChart, Tooltip, TooltipIndex } from 'recharts';
+import { RechartsDevtools } from '@recharts/devtools';
 
-// Register ChartJS components
-ChartJS.register(ArcElement, Tooltip, Legend);
-
-interface PieChartProps {
-  balance: number;
-  income: number;
-  expenses: number;
-}
-
-const PieChart: React.FC<PieChartProps> = ({ balance, income, expenses }) => {
-  const data = {
-    labels: ['Total Balance', 'Total Expenses', 'Total Income'],
-    datasets: [
-      {
-        data: [balance, expenses, income],
-        backgroundColor: [
-          'rgba(99, 102, 241, 0.8)', // Indigo for Balance
-          'rgba(239, 68, 68, 0.8)',  // Red for Expenses
-          'rgba(249, 115, 22, 0.8)', // Orange for Income
-        ],
-        borderColor: [
-          'rgba(99, 102, 241, 1)',
-          'rgba(239, 68, 68, 1)',
-          'rgba(249, 115, 22, 1)',
-        ],
-        borderWidth: 1,
-        borderRadius: 4,
-        spacing: 2,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: '70%',
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          padding: 20,
-          usePointStyle: true,
-          pointStyle: 'circle',
-          boxWidth: 8,
-          boxHeight: 8,
-          font: {
-            size: 12,
-            family: 'system-ui, -apple-system, sans-serif'
-          },
-          color: '#6B7280',
-          generateLabels: (chart: any) => {
-            const data = chart.data;
-            if (data.labels.length && data.datasets.length) {
-              return data.labels.map((label: string, i: number) => {
-                const value = data.datasets[0].data[i];
-                const color = data.datasets[0].backgroundColor[i];
-                return {
-                  text: `${label}: $${value.toLocaleString()}`,
-                  fillStyle: color,
-                  strokeStyle: color,
-                  lineWidth: 1,
-                  hidden: isNaN(value) || data.datasets[0].data[i] === 0,
-                  index: i
-                };
-              });
-            }
-            return [];
-          }
-        }
-      },
-      tooltip: {
-        callbacks: {
-          label: function(context: any) {
-            const label = context.label || '';
-            const value = context.raw || 0;
-            return `${label}: $${value.toLocaleString()}`;
-          }
-        },
-        displayColors: false,
-        backgroundColor: '#1F2937',
-        titleFont: { size: 12 },
-        bodyFont: { size: 14, weight: '600' },
-        padding: 10,
-        cornerRadius: 6,
-      }
-    },
-    elements: {
-      arc: {
-        borderWidth: 0
-      }
-    }
-  };
-
-  return (
-    <div className="bg-white p-6 rounded-xl shadow-lg h-full">
-      <h3 className="text-lg font-semibold text-gray-800 mb-6">Financial Overview</h3>
-      <div className="relative h-64 flex items-center justify-center">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-sm text-gray-500">Total Balance</p>
-            <p className="text-2xl font-bold text-gray-800">${balance.toLocaleString()}</p>
-          </div>
-        </div>
-        <div className="w-full h-full">
-          <Doughnut data={data} options={options} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default PieChart;
+//  #region Sample data
+//  const data01 = [
+//    { name: 'Group A', value: 400 },
+//    { name: 'Group B', value: 300 },
+//    { name: 'Group C', value: 300 },
+//    { name: 'Group D', value: 200 },
+//  ];
+ const data02 = [
+   { name: 'A1', value: 100 },
+   { name: 'A2', value: 300 },
+   { name: 'B1', value: 100 },
+   { name: 'B2', value: 80 },
+   { name: 'B3', value: 40 },
+   { name: 'B4', value: 30 },
+   { name: 'B5', value: 50 },
+   { name: 'C1', value: 100 },
+   { name: 'C2', value: 200 },
+   { name: 'D1', value: 150 },
+   { name: 'D2', value: 50 },
+ ];
+ 
+  // #endregion
+ export default function TwoLevelPieChart({
+   isAnimationActive = true,
+   defaultIndex,
+ }: {
+   isAnimationActive?: boolean;
+   defaultIndex?: TooltipIndex;
+ }) {
+   return (
+     <PieChart
+       style={{ width: '100%', height: '100%', maxWidth: '500px', maxHeight: '80vh', aspectRatio: 1 }}
+       responsive
+     >
+       {/* <Pie
+         data={data01}
+         dataKey="value"
+         cx="50%"
+         cy="50%"
+         outerRadius="50%"
+         fill="#8884d8"
+         isAnimationActive={isAnimationActive}
+       /> */}
+       <Pie
+         data={data02}
+         dataKey="value"
+         cx="50%"
+         cy="50%"
+         innerRadius={70}
+         outerRadius={90}
+         fill="#82ca9d"
+         label
+         isAnimationActive={isAnimationActive}
+         className=""
+       />
+       <Tooltip defaultIndex={defaultIndex} />
+       <RechartsDevtools />
+     </PieChart>
+   );
+ }

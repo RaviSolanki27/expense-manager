@@ -70,7 +70,7 @@ export function DataTable<T>({
                   key={String(item[keyField])}
                   className={twMerge(
                     'group',
-                    onRowClick && 'cursor-pointer hover:bg-purple-20',
+                    onRowClick && 'cursor-pointer text-gray-500 hover:bg-purple-20',
                     rowClassName
                   )}
                   onClick={() => onRowClick?.(item)}
