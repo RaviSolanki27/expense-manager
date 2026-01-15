@@ -7,6 +7,7 @@ import settingsReducer from "./slices/settingsSlice";
 import expenseReducer from "./slices/expenseSlice";
 import incomeReducer from "./slices/incomeSlice";
 import userReducer from "./slices/userSlice";
+import transactionsReducer from "@/features/transactions/transactionsSlice";
 
 // Configuration for redux-persist
 const persistConfig = {
@@ -18,6 +19,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
+  transactions: transactionsReducer,
   currency: currencyReducer,
   settings: settingsReducer,
   expenses: expenseReducer,

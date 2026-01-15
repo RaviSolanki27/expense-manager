@@ -153,9 +153,9 @@ const Dashboard = () => {
         {/* Pie Chart */}
         <Card>
           <PieChart
-            balance={balance}
-            income={totalIncome}
-            expenses={totalExpenses}
+            // balance={balance}
+            // income={totalIncome}
+            // expenses={totalExpenses}
           />
         </Card>
       </div>
