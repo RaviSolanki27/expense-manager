@@ -10,6 +10,7 @@ const Sidebar = () => {
   const menuItems = [
     { name: 'Dashboard', href: '/dashboard', icon: '📊' },
     { name: 'Transactions', href: '/transactions', icon: '📝' },
+    { name: 'Accounts', href: '/accounts', icon: '📝' },
     { name: 'Expenses', href: '/expense', icon: '💸' },
     { name: 'Income', href: '/income', icon: '💰' },
     { name: 'Settings', href: '/settings', icon: '⚙️' },
