@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Card, CardHeader } from '@/components/ui/card';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -38,8 +39,14 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-3xl font-bold text-center text-gray-700">Sign in to your account</h2>
+      <Card>
+
+
+<CardHeader>
+  {/* <h2 className="text-3xl font-bold text-center text-gray-700"> */}
+    Sign in to your account
+    {/* </h2> */}
+</CardHeader>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
             {error}
@@ -91,7 +98,10 @@ export default function LoginPage() {
             Don't have an account? Sign up
           </Link>
         </div>
-      </div>
+
+
+
+      </Card>
     </div>
   );
 }
