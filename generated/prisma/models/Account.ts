@@ -39,6 +39,9 @@ export type AccountMinAggregateOutputType = {
   name: string | null
   type: $Enums.AccountType | null
   balance: number | null
+  accountNumber: string | null
+  email: string | null
+  phone: string | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -49,6 +52,9 @@ export type AccountMaxAggregateOutputType = {
   name: string | null
   type: $Enums.AccountType | null
   balance: number | null
+  accountNumber: string | null
+  email: string | null
+  phone: string | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -59,6 +65,9 @@ export type AccountCountAggregateOutputType = {
   name: number
   type: number
   balance: number
+  accountNumber: number
+  email: number
+  phone: number
   userId: number
   createdAt: number
   updatedAt: number
@@ -79,6 +88,9 @@ export type AccountMinAggregateInputType = {
   name?: true
   type?: true
   balance?: true
+  accountNumber?: true
+  email?: true
+  phone?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -89,6 +101,9 @@ export type AccountMaxAggregateInputType = {
   name?: true
   type?: true
   balance?: true
+  accountNumber?: true
+  email?: true
+  phone?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -99,6 +114,9 @@ export type AccountCountAggregateInputType = {
   name?: true
   type?: true
   balance?: true
+  accountNumber?: true
+  email?: true
+  phone?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -196,6 +214,9 @@ export type AccountGroupByOutputType = {
   name: string
   type: $Enums.AccountType
   balance: number
+  accountNumber: string | null
+  email: string | null
+  phone: string | null
   userId: string
   createdAt: Date
   updatedAt: Date
@@ -229,6 +250,9 @@ export type AccountWhereInput = {
   name?: Prisma.StringFilter<"Account"> | string
   type?: Prisma.EnumAccountTypeFilter<"Account"> | $Enums.AccountType
   balance?: Prisma.FloatFilter<"Account"> | number
+  accountNumber?: Prisma.StringNullableFilter<"Account"> | string | null
+  email?: Prisma.StringNullableFilter<"Account"> | string | null
+  phone?: Prisma.StringNullableFilter<"Account"> | string | null
   userId?: Prisma.StringFilter<"Account"> | string
   createdAt?: Prisma.DateTimeFilter<"Account"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Account"> | Date | string
@@ -242,6 +266,9 @@ export type AccountOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  accountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -258,6 +285,9 @@ export type AccountWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Account"> | string
   type?: Prisma.EnumAccountTypeFilter<"Account"> | $Enums.AccountType
   balance?: Prisma.FloatFilter<"Account"> | number
+  accountNumber?: Prisma.StringNullableFilter<"Account"> | string | null
+  email?: Prisma.StringNullableFilter<"Account"> | string | null
+  phone?: Prisma.StringNullableFilter<"Account"> | string | null
   userId?: Prisma.StringFilter<"Account"> | string
   createdAt?: Prisma.DateTimeFilter<"Account"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Account"> | Date | string
@@ -271,6 +301,9 @@ export type AccountOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  accountNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -289,6 +322,9 @@ export type AccountScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Account"> | string
   type?: Prisma.EnumAccountTypeWithAggregatesFilter<"Account"> | $Enums.AccountType
   balance?: Prisma.FloatWithAggregatesFilter<"Account"> | number
+  accountNumber?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
+  email?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
+  phone?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Account"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Account"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Account"> | Date | string
@@ -299,6 +335,9 @@ export type AccountCreateInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutAccountsInput
@@ -311,6 +350,9 @@ export type AccountUncheckedCreateInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -323,6 +365,9 @@ export type AccountUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutAccountsNestedInput
@@ -335,6 +380,9 @@ export type AccountUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -347,6 +395,9 @@ export type AccountCreateManyInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -357,6 +408,9 @@ export type AccountUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -366,6 +420,9 @@ export type AccountUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -386,6 +443,9 @@ export type AccountCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  accountNumber?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -400,6 +460,9 @@ export type AccountMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  accountNumber?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -410,6 +473,9 @@ export type AccountMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   type?: Prisma.SortOrder
   balance?: Prisma.SortOrder
+  accountNumber?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -511,6 +577,9 @@ export type AccountCreateWithoutUserInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paymentMethods?: Prisma.PaymentMethodCreateNestedManyWithoutAccountInput
@@ -522,6 +591,9 @@ export type AccountUncheckedCreateWithoutUserInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   paymentMethods?: Prisma.PaymentMethodUncheckedCreateNestedManyWithoutAccountInput
@@ -562,6 +634,9 @@ export type AccountScalarWhereInput = {
   name?: Prisma.StringFilter<"Account"> | string
   type?: Prisma.EnumAccountTypeFilter<"Account"> | $Enums.AccountType
   balance?: Prisma.FloatFilter<"Account"> | number
+  accountNumber?: Prisma.StringNullableFilter<"Account"> | string | null
+  email?: Prisma.StringNullableFilter<"Account"> | string | null
+  phone?: Prisma.StringNullableFilter<"Account"> | string | null
   userId?: Prisma.StringFilter<"Account"> | string
   createdAt?: Prisma.DateTimeFilter<"Account"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Account"> | Date | string
@@ -572,6 +647,9 @@ export type AccountCreateWithoutPaymentMethodsInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutAccountsInput
@@ -583,6 +661,9 @@ export type AccountUncheckedCreateWithoutPaymentMethodsInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -610,6 +691,9 @@ export type AccountUpdateWithoutPaymentMethodsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutAccountsNestedInput
@@ -621,6 +705,9 @@ export type AccountUncheckedUpdateWithoutPaymentMethodsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -632,6 +719,9 @@ export type AccountCreateWithoutTransactionsInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutAccountsInput
@@ -643,6 +733,9 @@ export type AccountUncheckedCreateWithoutTransactionsInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -670,6 +763,9 @@ export type AccountUpdateWithoutTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutAccountsNestedInput
@@ -681,6 +777,9 @@ export type AccountUncheckedUpdateWithoutTransactionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -692,6 +791,9 @@ export type AccountCreateManyUserInput = {
   name: string
   type: $Enums.AccountType
   balance?: number
+  accountNumber?: string | null
+  email?: string | null
+  phone?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -701,6 +803,9 @@ export type AccountUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethods?: Prisma.PaymentMethodUpdateManyWithoutAccountNestedInput
@@ -712,6 +817,9 @@ export type AccountUncheckedUpdateWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paymentMethods?: Prisma.PaymentMethodUncheckedUpdateManyWithoutAccountNestedInput
@@ -723,6 +831,9 @@ export type AccountUncheckedUpdateManyWithoutUserInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
   balance?: Prisma.FloatFieldUpdateOperationsInput | number
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -772,6 +883,9 @@ export type AccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name?: boolean
   type?: boolean
   balance?: boolean
+  accountNumber?: boolean
+  email?: boolean
+  phone?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -786,6 +900,9 @@ export type AccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   type?: boolean
   balance?: boolean
+  accountNumber?: boolean
+  email?: boolean
+  phone?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -797,6 +914,9 @@ export type AccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   name?: boolean
   type?: boolean
   balance?: boolean
+  accountNumber?: boolean
+  email?: boolean
+  phone?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -808,12 +928,15 @@ export type AccountSelectScalar = {
   name?: boolean
   type?: boolean
   balance?: boolean
+  accountNumber?: boolean
+  email?: boolean
+  phone?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "balance" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
+export type AccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "balance" | "accountNumber" | "email" | "phone" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
 export type AccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   paymentMethods?: boolean | Prisma.Account$paymentMethodsArgs<ExtArgs>
@@ -839,6 +962,9 @@ export type $AccountPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     name: string
     type: $Enums.AccountType
     balance: number
+    accountNumber: string | null
+    email: string | null
+    phone: string | null
     userId: string
     createdAt: Date
     updatedAt: Date
@@ -1272,6 +1398,9 @@ export interface AccountFieldRefs {
   readonly name: Prisma.FieldRef<"Account", 'String'>
   readonly type: Prisma.FieldRef<"Account", 'AccountType'>
   readonly balance: Prisma.FieldRef<"Account", 'Float'>
+  readonly accountNumber: Prisma.FieldRef<"Account", 'String'>
+  readonly email: Prisma.FieldRef<"Account", 'String'>
+  readonly phone: Prisma.FieldRef<"Account", 'String'>
   readonly userId: Prisma.FieldRef<"Account", 'String'>
   readonly createdAt: Prisma.FieldRef<"Account", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Account", 'DateTime'>

@@ -12,7 +12,7 @@ const Card = ({
 }) => {
   return (
     <div
-      className={`bg-white py-3 px-5 min-h-[200px] min-w-[200px] rounded-3xl border border-gray-300 relative ${
+      className={`bg-white py-3 px-5 min-h-[150px] min-w-[200px] rounded-3xl border border-gray-300 relative ${
         applyHover
           ? " transition-all duration-200 hover:shadow-xl hover:shadow-card-background"
           : ""

@@ -760,6 +760,9 @@ export const AccountScalarFieldEnum = {
   name: 'name',
   type: 'type',
   balance: 'balance',
+  accountNumber: 'accountNumber',
+  email: 'email',
+  phone: 'phone',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

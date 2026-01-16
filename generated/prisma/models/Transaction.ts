@@ -1103,7 +1103,8 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     accountId: string
     paymentMethodId: string
     /**
-     * ===== Transfer Support =====
+     * *
+     *    * ===== Transfer Support =====
      */
     transferId: string | null
     createdAt: Date
